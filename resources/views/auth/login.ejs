@@ -2,7 +2,10 @@
     <div class="min-h-full flex items-center justify-center pt-40">
         <div class="max-w-md w-full space-y-8">
          
-          <form class="mt-8 space-y-6" action="#" method="POST">
+          <form class="mt-8 space-y-6" action="/login" method="post" method="POST">
+            <% if(messages.error) { %>
+              <span class="text-red-500 text-sm"><%= messages.error %></span>
+              <% } %>
             <input type="hidden" name="remember" value="true">
             <div class="rounded-md shadow-sm -space-y-px">
               <div>
@@ -20,7 +23,7 @@
            
       
             <div class="flex items-center justify-between">
-              <button type="button" class="btn-primary text-white font-bold py-2 px-4 rounded
+              <button type="submit" class="btn-primary text-white font-bold py-2 px-4 rounded
               focus:outline-none focus:shadow-outline">
                 Log In
               </button>
