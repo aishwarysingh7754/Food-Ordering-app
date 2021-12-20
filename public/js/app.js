@@ -283,7 +283,7 @@ axios.Axios = Axios;
 axios.Cancel = __webpack_require__(/*! ./cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
 axios.CancelToken = __webpack_require__(/*! ./cancel/CancelToken */ "./node_modules/axios/lib/cancel/CancelToken.js");
 axios.isCancel = __webpack_require__(/*! ./cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-axios.VERSION = __webpack_require__(/*! ./env/data */ "./node_modules/axios/lib/env/data.js").version;
+axios.VERSION = (__webpack_require__(/*! ./env/data */ "./node_modules/axios/lib/env/data.js").version);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -1100,7 +1100,7 @@ module.exports = function transformData(data, headers, fns) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
 var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
@@ -1703,7 +1703,7 @@ module.exports = function spread(callback) {
 "use strict";
 
 
-var VERSION = __webpack_require__(/*! ../env/data */ "./node_modules/axios/lib/env/data.js").version;
+var VERSION = (__webpack_require__(/*! ../env/data */ "./node_modules/axios/lib/env/data.js").version);
 
 var validators = {};
 
@@ -2168,7 +2168,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function initAdmin() {
+function initAdmin(socket) {
   var orderTableBody = document.querySelector('#orderTableBody');
   var orders = [];
   var markup; //    console.log(orderTableBody);
@@ -2198,9 +2198,158 @@ function initAdmin() {
       return "\n            <tr>\n            <td class=\"border px-4 py-2 text-green-900\">\n                <p>".concat(order._id, "</p>\n                <div>").concat(renderItems(order.items), "</div>\n            </td>\n            <td class=\"border px-4 py-2\">").concat(order.customerId.name, "</td>\n            <td class=\"border px-4 py-2\">").concat(order.address, "</td>\n            <td class=\"border px-4 py-2\">\n                <div class=\"inline-block relative w-64\">\n                    <form action=\"/admin/order/status\" method=\"POST\">\n                        <input type=\"hidden\" name=\"orderId\" value=\"").concat(order._id, "\">\n                        <select name=\"status\" onchange=\"this.form.submit()\"\n                            class=\"block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline\">\n                            <option value=\"order_placed\"\n                                ").concat(order.status === 'order_placed' ? 'selected' : '', ">\n                                Placed</option>\n                            <option value=\"confirmed\" ").concat(order.status === 'confirmed' ? 'selected' : '', ">\n                                Confirmed</option>\n                            <option value=\"prepared\" ").concat(order.status === 'prepared' ? 'selected' : '', ">\n                                Prepared</option>\n                            <option value=\"delivered\" ").concat(order.status === 'delivered' ? 'selected' : '', ">\n                                Delivered\n                            </option>\n                            <option value=\"completed\" ").concat(order.status === 'completed' ? 'selected' : '', ">\n                                Completed\n                            </option>\n                        </select>\n                    </form>\n                    <div\n                        class=\"pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700\">\n                        <svg class=\"fill-current h-4 w-4\" xmlns=\"http://www.w3.org/2000/svg\"\n                            viewBox=\"0 0 20 20\">\n                            <path\n                                d=\"M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z\" />\n                        </svg>\n                    </div>\n                </div>\n            </td>\n            <td class=\"border px-4 py-2\">\n                ").concat(moment__WEBPACK_IMPORTED_MODULE_1___default()(order.createdAt).format('hh:mm A'), "\n            </td>\n            <td class=\"border px-4 py-2\">\n                ").concat(order.paymentStatus ? 'paid' : 'Not paid', "\n            </td>\n        </tr>\n    ");
     }).join('');
   }
+
+  socket.on('orderPlaced', function (order) {
+    new (noty__WEBPACK_IMPORTED_MODULE_2___default())({
+      type: 'success',
+      timeout: 1000,
+      text: 'New order!'
+    }).show();
+    orders.unshift(order);
+    orderTableBody.innerHTML = '';
+    orderTableBody.innerHTML = generateMarkup(orders);
+  });
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (initAdmin);
+
+/***/ }),
+
+/***/ "./resources/js/app.js":
+/*!*****************************!*\
+  !*** ./resources/js/app.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! noty */ "./node_modules/noty/lib/noty.js");
+/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(noty__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+ // console.log(initAdmin);
+
+var addToCart = document.querySelectorAll('.add-to-cart');
+var cartCounter = document.querySelector('#cartCounter');
+
+function updateCart(pizza) {
+  axios__WEBPACK_IMPORTED_MODULE_0___default().post('/update-cart', pizza).then(function (res) {
+    cartCounter.innerText = res.data.totalQty;
+    new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
+      type: 'success',
+      timeout: 1000,
+      text: 'item added to cart'
+    }).show();
+  })["catch"](function (err) {
+    new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
+      type: 'success',
+      timeout: 1000,
+      text: 'Something Went Wrong'
+    }).show();
+  });
+}
+
+addToCart.forEach(function (btn) {
+  btn.addEventListener('click', function (e) {
+    // console.log(e)
+    var pizza = JSON.parse(btn.dataset.pizza);
+    updateCart(pizza);
+  });
+}); //Remove alert message after X seconds
+
+var alertMsg = document.querySelector('#success-alert');
+
+if (alertMsg) {
+  setTimeout(function () {
+    alertMsg.remove();
+  }, 2000);
+} // Change order status
+
+
+var statuses = document.querySelectorAll('.status_line');
+var hiddenInput = document.querySelector('#hiddenInput');
+var order = hiddenInput ? hiddenInput.value : null;
+order = JSON.parse(order);
+var time = document.createElement('small');
+
+function updateStatus(order) {
+  statuses.forEach(function (status) {
+    status.classList.remove('step-completed');
+    status.classList.remove('current');
+  });
+  var stepCompleted = true;
+  statuses.forEach(function (status) {
+    var dataProp = status.dataset.status;
+
+    if (stepCompleted) {
+      status.classList.add('step-completed');
+    }
+
+    if (dataProp === order.status) {
+      stepCompleted = false;
+      time.innerText = moment__WEBPACK_IMPORTED_MODULE_3___default()(order.updatedAt).format('hh:mm A');
+      status.appendChild(time);
+
+      if (status.nextElementSibling) {
+        status.nextElementSibling.classList.add('current');
+      }
+    }
+  });
+}
+
+updateStatus(order); //Socket
+
+var socket = io();
+(0,_admin__WEBPACK_IMPORTED_MODULE_2__["default"])(socket); // Join
+
+if (order) {
+  socket.emit('join', "order_".concat(order._id));
+}
+
+var adminAreaPath = window.location.pathname;
+
+if (adminAreaPath.includes('admin')) {
+  socket.emit('join', 'adminRoom');
+}
+
+socket.on('orderUpdated', function (data) {
+  var updatedOrder = _objectSpread({}, order);
+
+  updatedOrder.updatedAt = moment__WEBPACK_IMPORTED_MODULE_3___default()().format();
+  updatedOrder.status = data.status;
+  console.log(data, "this one");
+  updateStatus(updatedOrder);
+  new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
+    type: 'success',
+    timeout: 1000,
+    text: 'order updated'
+  }).show();
+});
+
+/***/ }),
+
+/***/ "./resources/scss/app.scss":
+/*!*********************************!*\
+  !*** ./resources/scss/app.scss ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
 
 /***/ }),
 
@@ -26988,7 +27137,42 @@ process.umask = function() { return 0; };
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -27038,62 +27222,68 @@ process.umask = function() { return 0; };
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/public/js/app": 0,
+/******/ 			"public/css/app": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkfoodtracker"] = self["webpackChunkfoodtracker"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-/*!*****************************!*\
-  !*** ./resources/js/app.js ***!
-  \*****************************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! noty */ "./node_modules/noty/lib/noty.js");
-/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(noty__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
-
-
-
-console.log(_admin__WEBPACK_IMPORTED_MODULE_2__["default"]);
-var addToCart = document.querySelectorAll('.add-to-cart');
-var cartCounter = document.querySelector('#cartCounter');
-
-function updateCart(pizza) {
-  axios__WEBPACK_IMPORTED_MODULE_0___default().post('/update-cart', pizza).then(function (res) {
-    cartCounter.innerText = res.data.totalQty;
-    new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
-      type: 'success',
-      timeout: 1000,
-      text: 'item added to cart'
-    }).show();
-  })["catch"](function (err) {
-    new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
-      type: 'success',
-      timeout: 1000,
-      text: 'Something Went Wrong'
-    }).show();
-  });
-}
-
-addToCart.forEach(function (btn) {
-  btn.addEventListener('click', function (e) {
-    // console.log(e)
-    var pizza = JSON.parse(btn.dataset.pizza);
-    updateCart(pizza);
-  });
-}); //Remove alert message after X seconds
-
-var alertMsg = document.querySelector('#success-alert');
-
-if (alertMsg) {
-  setTimeout(function () {
-    alertMsg.remove();
-  }, 2000);
-}
-
-(0,_admin__WEBPACK_IMPORTED_MODULE_2__["default"])();
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["public/css/app"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["public/css/app"], () => (__webpack_require__("./resources/scss/app.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
 /******/ })()
 ;

@@ -10,6 +10,7 @@ const session = require('express-session')
 const flash = require('express-flash')
 const MongoDbStore=require('connect-mongo')
 const passport = require('passport')
+const Emitter = require('events')
 //Database connection
 
 const url='mongodb://localhost/foodorder';
@@ -18,6 +19,10 @@ mongoose.connect(url);
 
 const connection=mongoose.connection;
 connection.on('error', console.error.bind(console,'Connection Error'));
+
+//Event emitter
+const eventEmitter = new Emitter()
+app.set('eventEmitter', eventEmitter)
 
 
 app.use(session({
@@ -31,8 +36,15 @@ app.use(session({
         collectionName:'sessions',
     }),
 }));
+
+// //session config
+// app.use(session({
+//     secret: process.env.COOKIE_SE
+// }))
+
 //Passport config
 const passportInit = require('./app/config/passport')
+const { Server } = require('http')
 passportInit(passport)
 app.use(passport.initialize())
 app.use(passport.session())
@@ -55,9 +67,30 @@ app.use(expressLayout)
 app.set('views',path.join(__dirname,'/resources/views'))
 app.set('view engine','ejs')
 
-const temp = require('./routes/web')(app);
+require('./routes/web')(app);
 
 
-app.listen(PORT,() =>{
-    console.log('Listening on port 3000');
+const server = app.listen(PORT , () => {
+    console.log(`Listening on port ${PORT}`)
+})
+
+// Socket
+
+const io = require('socket.io')(server)
+io.on('connection', (socket) => {
+// Join
+
+socket.on('join', (orderId) => {
+    console.log(socket.id,"hye")
+socket.join(orderId)
+})
+})
+
+eventEmitter.on('orderUpdated', (data) => {
+    console.log(data,"order updated")
+io.to(`order_${data.id}`).emit('orderUpdated', data)
+})
+
+eventEmitter.on('orderPlaced', (data) => {
+    io.to('adminRoom').emit('orderPlaced',data)
 })

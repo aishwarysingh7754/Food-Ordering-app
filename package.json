@@ -14,6 +14,9 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.24.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.3",
+    "babel-preset-env": "^1.7.0",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.6.0",
     "cross-env": "^7.0.3",
@@ -28,10 +31,12 @@
     "mongoose": "^6.0.12",
     "noty": "^3.2.0-beta-deprecated",
     "passport": "0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "socket.io": "^4.4.0",
+    "webpack": "^5.64.4"
   },
   "devDependencies": {
-    "laravel-mix": "^6.0.35",
+    "laravel-mix": "^6.0.39",
     "nodemon": "^2.0.14",
     "resolve-url-loader": "4.0.0",
     "sass": "^1.43.4",
