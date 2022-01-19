@@ -15,7 +15,7 @@ const Emitter = require('events')
 
 const url='mongodb://localhost/foodorder';
 
-mongoose.connect(url);
+mongoose.connect(process.env.MONGO_CONNECTION_URL);
 
 const connection=mongoose.connection;
 connection.on('error', console.error.bind(console,'Connection Error'));
@@ -31,7 +31,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
     store: MongoDbStore.create({
-        mongoUrl:url,
+        mongoUrl:process.env.MONGO_CONNECTION_URL,
         // dbName:foodorder,
         collectionName:'sessions',
     }),
@@ -68,6 +68,9 @@ app.set('views',path.join(__dirname,'/resources/views'))
 app.set('view engine','ejs')
 
 require('./routes/web')(app);
+app.use((req,res) =>{
+   res.status(404).render('errors/404')
+})
 
 
 const server = app.listen(PORT , () => {
